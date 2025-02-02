@@ -1,4 +1,10 @@
 # app/main.py
+from app.api.endpoints import market_data  # Импорт роутера
+from app.services.database import init_db
+from app.core.config import logger
+import logging
+from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request
 import webbrowser
 import asyncio
 from fastapi import FastAPI
@@ -23,6 +29,34 @@ def open_browser():
     root.mainloop()
 
 
+# start.py
+
+# Инициализация приложения
+app = FastAPI()
+app.include_router(market_data.router)  # Подключение эндпоинтов
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
+
+# Инициализация БД
+init_db()
+
+
+@app.on_event("startup")
+async def startup():
+    logger.info("Сервер запущен")
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    logger.info("Сервер остановлен")
+
+
+@app.get("/")
+async def root(request: Request):
+    logger.info("Запрос к главной странице")
+    return templates.TemplateResponse("index.html", {"request": request})
+
+# ... остальной код запуска сервера и GUI ...
 if __name__ == "__main__":
     server_thread = Thread(target=start_server)
     server_thread.daemon = True

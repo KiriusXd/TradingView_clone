@@ -1,4 +1,5 @@
 # app/core/config.py
+import logging
 import os
 import configparser
 from pathlib import Path
@@ -28,3 +29,15 @@ class Config:
 
 
 settings = Config()
+
+# Настройка логгера
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler("app.log"),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger("tradingview_analog")

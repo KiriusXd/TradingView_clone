@@ -13,5 +13,15 @@ class BybitClient:
             'enableRateLimit': True,
         })
 
-    async def fetch_ohlcv(self, symbol: str, timeframe: str = '1h', limit: int = 100):
-        return await self.exchange.fetch_ohlcv(symbol, timeframe, limit)
+    # app/services/bybit_client.py
+
+
+async def fetch_ohlcv(self, symbol: str, timeframe: str = '1h', limit: int = 100):
+    try:
+        data = await self.exchange.fetch_ohlcv(symbol, timeframe, limit)
+        if not data:
+            return []
+        return data
+    except ccxt.NetworkError as e:
+        print(f"Ошибка сети: {e}")
+        return []
