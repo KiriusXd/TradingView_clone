@@ -1,0 +1,39 @@
+# .gitlab-ci.yml
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  PYTHON_VERSION: "3.9"
+
+test:
+  stage: test
+  image: python:${PYTHON_VERSION}
+  script:
+    - pip install -r requirements.txt
+    - pytest --html=test_report.html
+  artifacts:
+    paths:
+      - test_report.html
+
+build_linux:
+  stage: build
+  image: python:${PYTHON_VERSION}
+  script:
+    - pip install -r requirements.txt
+    - pyinstaller build_scripts/build.spec --distpath=dist/linux
+  artifacts:
+    paths:
+      - dist/linux/
+
+build_windows:
+  stage: build
+  image: wine/wine
+  script:
+    - apt-get update && apt-get install -y wine
+    - pip install -r requirements.txt
+    - wine pyinstaller build_scripts/build.spec --distpath=dist/windows
+  artifacts:
+    paths:
+      - dist/windows/

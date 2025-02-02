@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TradingView Analog</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TradingView Analog (Bybit)</h1>
+        <div class="controls">
+            <input type="text" id="symbol" placeholder="Введите пару (например, BTC/USDT)" value="BTC/USDT">
+            <button onclick="loadData()">Загрузить</button>
+            <select id="timeframe">
+                <option value="1h">1 час</option>
+                <option value="4h">4 часа</option>
+                <option value="1d">1 день</option>
+            </select>
+        </div>
+        <div id="chart"></div>
+    </div>
+
+    <!-- Подключаем Plotly для графиков -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
